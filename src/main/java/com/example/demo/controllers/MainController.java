@@ -29,4 +29,9 @@ public class MainController {
         return "tajny content";
     }
 
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
+
 }
