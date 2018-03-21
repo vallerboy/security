@@ -4,6 +4,7 @@ package com.example.demo;
 import com.example.demo.models.SecureUserDetailsModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Role;
 import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -22,15 +23,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         this.userDetailsModel = userDetailsModel;
     }
 
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers("/content")
-                .authenticated()
+                .hasAnyRole("ADMIN", "USER")
                 .antMatchers("/")
                 .permitAll()
                   .and()
-                .formLogin();
+                .formLogin()
+                  .and()
+                .csrf().disable()
+                .exceptionHandling()
+                .accessDeniedPage("/permission");
     }
 
     @Autowired
