@@ -6,6 +6,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.social.facebook.api.Facebook;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -22,12 +23,14 @@ public class MainController {
 
 
     @GetMapping("/")
-    @ResponseBody
-    public String index(){
+    public String index(Model model){
+
         if(connectionRepository.findPrimaryConnection(Facebook.class) == null){
-            return "Nie zalogowano";
+            return "redirect:/connect/facebook";
         }
-        return facebook.feedOperations().getFeed().stream().map(s -> s.getMessage()).collect(Collectors.joining(","));
+        String text = facebook.feedOperations().getFeed().stream().map(s -> s.getMessage()).collect(Collectors.joining(","));
+        model.addAttribute("someText", text);
+        return "index";
     }
 
     @GetMapping("/cos")
