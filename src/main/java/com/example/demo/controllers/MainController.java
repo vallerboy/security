@@ -5,6 +5,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.social.facebook.api.Facebook;
+import org.springframework.social.facebook.api.Post;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +29,7 @@ public class MainController {
         if(connectionRepository.findPrimaryConnection(Facebook.class) == null){
             return "redirect:/connect/facebook";
         }
-        String text = facebook.feedOperations().getFeed().stream().map(s -> s.getMessage()).collect(Collectors.joining(","));
+        String text = facebook.feedOperations().getFeed().stream().map(Post::getMessage).collect(Collectors.joining(","));
         model.addAttribute("someText", text);
         return "index";
     }
@@ -48,6 +49,7 @@ public class MainController {
 
     @GetMapping("/login")
     public String login() {
+
         return "login";
     }
 
